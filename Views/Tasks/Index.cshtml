@@ -1,0 +1,19 @@
+﻿@model IEnumerable<MvcToDoList.Models.Own.Task>
+@using MvcToDoList.Models.Own
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Task list</h2>
+<p>
+    @Html.ActionLink("New Task", "Create", null, new { @class = "btn btn-success"})
+</p>
+<div class="container">
+    @foreach (var task in Model)
+    {
+        if (task.Description.Length > 100)
+        {
+            task.Description = task.Description.Substring(0, 100) + "...";
+        }
+        @Html.Partial("TaskSummary", task);
+    }
+</div>
