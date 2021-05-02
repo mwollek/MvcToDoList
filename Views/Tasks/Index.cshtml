@@ -3,17 +3,14 @@
 @{
     ViewBag.Title = "Index";
 }
-<h2>Task list</h2>
-<p>
-    @Html.ActionLink("New Task", "Create", null, new { @class = "btn btn-success"})
+<h2 class="text-center">Tasks List</h2>
+<p class="text-center">
+    @Html.ActionLink("New Task", "Create", null, new { @class = "btn btn-success center-blok"})
 </p>
 <div class="container">
     @foreach (var task in Model)
     {
-        if (task.Description.Length > 100)
-        {
-            task.Description = task.Description.Substring(0, 100) + "...";
-        }
+        task.Name = task.Name.Length > 28 ? task.Name.Substring(0, 25) + "..." : task.Name;
         @Html.Partial("TaskSummary", task);
     }
 </div>
