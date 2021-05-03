@@ -11,7 +11,7 @@ namespace MvcToDoList.Models.ViewModels
         public string Title { get; set; }
         public string DaysLeftMessage { get; set; }
         public string Status { get; set; }
-        public DateTime FinishDate { get; set; }
+        public string FinishDate { get; set; }
 
     }
 }

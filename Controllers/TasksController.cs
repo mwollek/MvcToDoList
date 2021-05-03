@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MvcToDoList.Models;
 using MvcToDoList.Models.Own;
+using MvcToDoList.Models.ViewModels;
 
 namespace MvcToDoList.Controllers
 {
@@ -21,8 +22,20 @@ namespace MvcToDoList.Controllers
         public ActionResult Index()
         {
             string userId = User.Identity.GetUserId();
-            var tasks = dbContext.Tasks.Include(t => t.ApplicationUser).Where(t => t.ApplicationUserId == userId);
-            return View(tasks.ToList());
+            var tasks = dbContext.Tasks.Include(t => t.ApplicationUser).Where(t => t.ApplicationUserId == userId).ToList();
+            List<TaskViewModel> models = new List<TaskViewModel>();
+
+            tasks.ForEach(x => models.Add(new TaskViewModel()
+            {
+                TaskId = x.TaskId,
+                Title = x.Title.Length > 28 ? x.Title.Substring(0, 25) + "..." : x.Title,
+                Status = Task.ProgressStatesDict[x.ProgressState],
+                FinishDate = x.PlannedFinishDate.ToShortDateString(),
+                DaysLeftMessage = (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear) >= 0 
+                                    ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "missed"
+            }));
+
+            return View(models);
         }
 
         // GET: Tasks/Details/5
@@ -118,6 +131,24 @@ namespace MvcToDoList.Controllers
         {
             Task task = dbContext.Tasks.Find(id);
             dbContext.Tasks.Remove(task);
+            dbContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Undo(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Task task = dbContext.Tasks.Find(id);
+            if (task == null)
+            {
+                return HttpNotFound();
+            }
+
+            task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;
+            dbContext.Entry(task).State = EntityState.Modified;
             dbContext.SaveChanges();
             return RedirectToAction("Index");
         }

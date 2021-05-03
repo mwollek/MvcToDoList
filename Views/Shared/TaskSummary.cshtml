@@ -1,13 +1,9 @@
-﻿@model MvcToDoList.Models.Own.Task
-@using MvcToDoList.Models.Own
-@{
-    int daysLeft = Model.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear;
-    string message = daysLeft >= 0 ? daysLeft.ToString() : "missed";
-}
+﻿@model MvcToDoList.Models.ViewModels.TaskViewModel
+
 <div class="col-sm-6 col-md-4">
     <div class="thumbnail">
         <div class="caption">
-            @if (Model.ProgressState == (int)Task.ProgressStatesEnum.Done)
+            @if (Model.Status == "done")
             {
                 <h3><del>@Model.Title</del></h3>
             }
@@ -15,10 +11,20 @@
             {
                 <h3>@Model.Title</h3>
             }
-            <p>Status: @Task.ProgressStatesDict[Model.ProgressState]</p>
-            <p>Finish date: @Model.PlannedFinishDate.Date.ToShortDateString()</p>
-            <p>Days left: @message</p>
-            @Html.ActionLink("Edit", "Edit", new { id = Model.TaskId }, new { @class = "btn btn-primary" })
+            <p>Status: @Model.Status</p>
+            <p>Finish date: @Model.FinishDate</p>
+            <p>Days left: @Model.DaysLeftMessage</p>
+
+            @if (Model.Status == "done")
+            {
+                @Ajax.ActionLink("Undo", "Undo", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST"},new { @class = "btn btn-warning" }) 
+            }
+            else
+            {
+                @Ajax.ActionLink("Done", "Done", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = "btn btn-success" }) 
+            }
+            @Ajax.ActionLink("Delete", "Delete", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = "btn btn-danger" })
+            
         </div>
     </div>
 </div>
