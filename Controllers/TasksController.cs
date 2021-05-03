@@ -32,7 +32,9 @@ namespace MvcToDoList.Controllers
                 Status = Task.ProgressStatesDict[x.ProgressState],
                 FinishDate = x.PlannedFinishDate.ToShortDateString(),
                 DaysLeftMessage = (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear) >= 0 
-                                    ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "missed"
+                                    ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "missed",
+                ModifyButtonLinkText = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "Undo" : "Done",
+                ButtonStyle = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "warning" : "success"
             }));
 
             return View(models);
