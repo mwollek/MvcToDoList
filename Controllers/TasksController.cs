@@ -132,6 +132,7 @@ namespace MvcToDoList.Controllers
             Task task = dbContext.Tasks.Find(id);
             dbContext.Tasks.Remove(task);
             dbContext.SaveChanges();
+            TempData["message"] = "Task succesfully deleted";
             return RedirectToAction("Index");
         }
 
@@ -150,7 +151,7 @@ namespace MvcToDoList.Controllers
             switch (task.ProgressState)
             {
                 case (int)Task.ProgressStatesEnum.Done:
-                    task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;
+                    task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;                   
                     break;
                 case (int)Task.ProgressStatesEnum.InProgress:
                     task.ProgressState = (int)Task.ProgressStatesEnum.Done;
@@ -158,9 +159,10 @@ namespace MvcToDoList.Controllers
                 default:
                     break;
             }
-
+            TempData["message"] = $"Set task status to: {Task.ProgressStatesDict[task.ProgressState]}";
             dbContext.Entry(task).State = EntityState.Modified;
             dbContext.SaveChanges();
+            
             return RedirectToAction("Index");
         }
    

@@ -3,6 +3,10 @@
 @{
     ViewBag.Title = "Index";
 }
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success" >@TempData["message"]</div>
+}
 <h2 class="text-center">Tasks List</h2>
 <p class="text-center">
     @Html.ActionLink("New Task", "Create", null, new { @class = "btn btn-success center-blok"})
