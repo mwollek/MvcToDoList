@@ -17,11 +17,11 @@
 
             @if (Model.Status == "done")
             {
-                @Ajax.ActionLink("Undo", "Undo", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST"},new { @class = "btn btn-warning" }) 
+                @Ajax.ActionLink("Undo", "ModifyStatus", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST"},new { @class = "btn btn-warning" }) 
             }
             else
             {
-                @Ajax.ActionLink("Done", "Done", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = "btn btn-success" }) 
+                @Ajax.ActionLink("Done", "ModifyStatus", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = "btn btn-success" }) 
             }
             @Ajax.ActionLink("Delete", "Delete", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = "btn btn-danger" })
             

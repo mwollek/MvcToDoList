@@ -135,7 +135,7 @@ namespace MvcToDoList.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Undo(int? id)
+        public ActionResult ModifyStatus(int? id)
         {
             if (id == null)
             {
@@ -147,12 +147,23 @@ namespace MvcToDoList.Controllers
                 return HttpNotFound();
             }
 
-            task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;
+            switch (task.ProgressState)
+            {
+                case (int)Task.ProgressStatesEnum.Done:
+                    task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;
+                    break;
+                case (int)Task.ProgressStatesEnum.InProgress:
+                    task.ProgressState = (int)Task.ProgressStatesEnum.Done;
+                    break;
+                default:
+                    break;
+            }
+
             dbContext.Entry(task).State = EntityState.Modified;
             dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
-
+   
         protected override void Dispose(bool disposing)
         {
             if (disposing)
