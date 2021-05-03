@@ -9,11 +9,11 @@
         <div class="caption">
             @if (Model.ProgressState == (int)Task.ProgressStatesEnum.Done)
             {
-                <h3><del>@Model.Name</del></h3>
+                <h3><del>@Model.Title</del></h3>
             }
             else
             {
-                <h3>@Model.Name</h3>
+                <h3>@Model.Title</h3>
             }
             <p>Status: @Task.ProgressStatesDict[Model.ProgressState]</p>
             <p>Finish date: @Model.PlannedFinishDate.Date.ToShortDateString()</p>

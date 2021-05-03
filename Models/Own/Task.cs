@@ -13,7 +13,7 @@ namespace MvcToDoList.Models.Own
 
         [Required(ErrorMessage = "Task name is required")]
         [Display(Name = "Task name")]
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public string Description { get; set; }
 
