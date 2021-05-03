@@ -1,0 +1,15 @@
+﻿@model MvcToDoList.Models.ViewModels.ConfirmedTaskViewModel
+@using MvcToDoList.Models.Own
+<div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+        <div class="caption">
+            <h3>@Model.Title</h3>
+            <p>Planned date: @Model.PlannedFinishDate</p>
+            <p>Finish date: @Model.ActualFinishDate</p>
+            <p>Days spent: @Model.TotalDays</p>
+            <p>Status: <p style="color:@Model.OnTimeStatusCollor"><b>@Model.OnTimeStats</b><p></p>
+
+            @Html.ActionLink("Details", "Details", new { id = Model.TaskId }, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>

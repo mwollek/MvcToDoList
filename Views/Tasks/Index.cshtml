@@ -7,9 +7,10 @@
 {
     <div class="alert alert-success" >@TempData["message"]</div>
 }
-<h2 class="text-center">Tasks List</h2>
+<h2 class="text-center">Ongoing Tasks Dashboard</h2>
 <p class="text-center">
-    @Html.ActionLink("New Task", "Create", null, new { @class = "btn btn-success center-blok"})
+    @Html.ActionLink("New Task", "Create", null, new { @class = "btn btn-success center-blok" })
+    @Html.ActionLink("Confirmed Task", "ConfirmedTasks", null, new { @class = "btn btn-primary center-blok" })
 </p>
 <div class="container">
     @foreach (var task in Model)

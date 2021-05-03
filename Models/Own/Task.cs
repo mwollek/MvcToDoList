@@ -26,6 +26,13 @@ namespace MvcToDoList.Models.Own
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
+        [ScaffoldColumn(false)]
+        [DataType(DataType.Date)]
+        public DateTime? ActualFinishedDate { get; set; }
+
+        [ScaffoldColumn(false)]
+        public bool? Missed { get; set; }
+
         public int ProgressState { get; set; } = (int)ProgressStatesEnum.InProgress;
 
         // navigation props
@@ -35,13 +42,15 @@ namespace MvcToDoList.Models.Own
         public enum ProgressStatesEnum : int
         {
             InProgress = 1,
-            Done = 2
+            Done = 2,
+            Confirmed = 3
         }
 
         public static Dictionary<int, string> ProgressStatesDict = new Dictionary<int, string>
         {
             { (int)ProgressStatesEnum.InProgress, "in progress"},
-            { (int)ProgressStatesEnum.Done, "done"}
+            { (int)ProgressStatesEnum.Done, "done"},
+            { (int)ProgressStatesEnum.Confirmed, "confirmed as done"}
         };
 
     }

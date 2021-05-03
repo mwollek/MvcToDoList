@@ -1,0 +1,17 @@
+﻿@model IEnumerable<MvcToDoList.Models.ViewModels.ConfirmedTaskViewModel>
+@using MvcToDoList.Models.Own
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 class="text-center">Confirmed Tasks Dashboard</h2>
+<p class="text-center">
+    @Html.ActionLink("Tasks List", "Index", null, new { @class = "btn btn-default center-blok" })
+</p>
+<div class="container">
+    @foreach (var task in Model)
+    {
+        @Html.Partial("ConfirmedTaskSummary", task);
+    }
+</div>
+

@@ -11,9 +11,11 @@ namespace MvcToDoList.Models.ViewModels
         public string Title { get; set; }
         public string DaysLeftMessage { get; set; }
         public string Status { get; set; }
-        public string FinishDate { get; set; }
+        public string PlannedFinishDate { get; set; }
         public string ModifyButtonLinkText { get; set; }
         public string ButtonStyle { get; set; }
+        public string ThumbnailBackgroundStyle { get; set; }
+
 
 
 

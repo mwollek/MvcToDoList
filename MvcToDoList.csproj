@@ -186,11 +186,24 @@
     <Compile Include="Migrations\202105011948337_Task-Rename-ToDoId-TaskId.Designer.cs">
       <DependentUpon>202105011948337_Task-Rename-ToDoId-TaskId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105031536202_AddedColumnTask_ActualFinishedDate.cs" />
+    <Compile Include="Migrations\202105031536202_AddedColumnTask_ActualFinishedDate.Designer.cs">
+      <DependentUpon>202105031536202_AddedColumnTask_ActualFinishedDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105031613085_AddedColumnTask_Missed.cs" />
+    <Compile Include="Migrations\202105031613085_AddedColumnTask_Missed.Designer.cs">
+      <DependentUpon>202105031613085_AddedColumnTask_Missed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105031623040_UpdateColumnTask_ActualFinishedDateNullable.cs" />
+    <Compile Include="Migrations\202105031623040_UpdateColumnTask_ActualFinishedDateNullable.Designer.cs">
+      <DependentUpon>202105031623040_UpdateColumnTask_ActualFinishedDateNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Own\Task.cs" />
+    <Compile Include="Models\ViewModels\ConfirmedTaskViewModel.cs" />
     <Compile Include="Models\ViewModels\TaskViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -257,6 +270,8 @@
     <Content Include="Views\Tasks\Edit.cshtml" />
     <Content Include="Views\Tasks\Index.cshtml" />
     <Content Include="Views\Shared\TaskSummary.cshtml" />
+    <Content Include="Views\Tasks\ConfirmedTasks.cshtml" />
+    <Content Include="Views\Shared\ConfirmedTaskSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -283,6 +298,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202105011948337_Task-Rename-ToDoId-TaskId.resx">
       <DependentUpon>202105011948337_Task-Rename-ToDoId-TaskId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105031536202_AddedColumnTask_ActualFinishedDate.resx">
+      <DependentUpon>202105031536202_AddedColumnTask_ActualFinishedDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105031613085_AddedColumnTask_Missed.resx">
+      <DependentUpon>202105031613085_AddedColumnTask_Missed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105031623040_UpdateColumnTask_ActualFinishedDateNullable.resx">
+      <DependentUpon>202105031623040_UpdateColumnTask_ActualFinishedDateNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

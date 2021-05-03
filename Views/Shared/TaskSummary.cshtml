@@ -1,7 +1,7 @@
 ﻿@model MvcToDoList.Models.ViewModels.TaskViewModel
-
+@using MvcToDoList.Models.Own
 <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
+    <div class="thumbnail" style=@Model.ThumbnailBackgroundStyle>
         <div class="caption">
             @if (Model.Status == "done")
             {
@@ -12,13 +12,16 @@
                 <h3>@Model.Title</h3>
             }
             <p>Status: @Model.Status</p>
-            <p>Finish date: @Model.FinishDate</p>
+            <p>Finish date: @Model.PlannedFinishDate</p>
             <p>Days left: @Model.DaysLeftMessage</p>
 
 
-            @Ajax.ActionLink(Model.ModifyButtonLinkText, "ModifyStatus", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST"},new { @class = $"btn btn-{Model.ButtonStyle}" }) 
-            @Ajax.ActionLink("Delete", "Delete", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = "btn btn-danger" })
-            
+            @Ajax.ActionLink(Model.ModifyButtonLinkText, "ModifyStatus", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = $"btn btn-{Model.ButtonStyle}" })
+            @if (Model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
+            {
+                @Ajax.ActionLink("Confirm As Done", "ModifyStatus", new { id = Model.TaskId, confirmed = true}, new AjaxOptions { HttpMethod = "POST" }, new { @class = $"btn btn-primary" })
+
+            }
         </div>
     </div>
 </div>

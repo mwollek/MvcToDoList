@@ -22,7 +22,11 @@ namespace MvcToDoList.Controllers
         public ActionResult Index()
         {
             string userId = User.Identity.GetUserId();
-            var tasks = dbContext.Tasks.Include(t => t.ApplicationUser).Where(t => t.ApplicationUserId == userId).ToList();
+            var tasks = dbContext.Tasks
+                .Include(t => t.ApplicationUser)
+                .Where(t => t.ApplicationUserId == userId)
+                .Where(t => t.ProgressState != (int)Task.ProgressStatesEnum.Confirmed)
+                .ToList();
             List<TaskViewModel> models = new List<TaskViewModel>();
 
             tasks.ForEach(x => models.Add(new TaskViewModel()
@@ -30,12 +34,20 @@ namespace MvcToDoList.Controllers
                 TaskId = x.TaskId,
                 Title = x.Title.Length > 28 ? x.Title.Substring(0, 25) + "..." : x.Title,
                 Status = Task.ProgressStatesDict[x.ProgressState],
-                FinishDate = x.PlannedFinishDate.ToShortDateString(),
+                PlannedFinishDate = x.PlannedFinishDate.ToShortDateString(),
                 DaysLeftMessage = (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear) >= 0 
-                                    ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "missed",
+                                    ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "passed",
                 ModifyButtonLinkText = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "Undo" : "Done",
                 ButtonStyle = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "warning" : "success"
             }));
+            
+            foreach (var model in models)
+            {
+                if (model.DaysLeftMessage == "passed" & model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
+                    model.ThumbnailBackgroundStyle = "background-color:#FCD9DB";
+                if (model.DaysLeftMessage != "passed" & model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
+                    model.ThumbnailBackgroundStyle = "background-color:#F3FDEC";
+            }
 
             return View(models);
         }
@@ -138,7 +150,7 @@ namespace MvcToDoList.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult ModifyStatus(int? id)
+        public ActionResult ModifyStatus(int? id, bool? confirmed)
         {
             if (id == null)
             {
@@ -150,22 +162,59 @@ namespace MvcToDoList.Controllers
                 return HttpNotFound();
             }
 
-            switch (task.ProgressState)
+            if (confirmed == true)
             {
-                case (int)Task.ProgressStatesEnum.Done:
-                    task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;                   
-                    break;
-                case (int)Task.ProgressStatesEnum.InProgress:
-                    task.ProgressState = (int)Task.ProgressStatesEnum.Done;
-                    break;
-                default:
-                    break;
+                task.ProgressState = (int)Task.ProgressStatesEnum.Confirmed;
+                task.ActualFinishedDate = DateTime.Now.Date;
+                task.Missed = task.PlannedFinishDate < task.ActualFinishedDate ? true : false;
             }
-            TempData["message"] = $"Set task status to: {Task.ProgressStatesDict[task.ProgressState]}";
+            else
+            {
+                switch (task.ProgressState)
+                {
+                    case (int)Task.ProgressStatesEnum.Done:
+                        task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;
+                        break;
+                    case (int)Task.ProgressStatesEnum.InProgress:
+                        task.ProgressState = (int)Task.ProgressStatesEnum.Done;
+                        break;
+                    default:
+                        break;
+                }
+                TempData["message"] = $"Set task status to: {Task.ProgressStatesDict[task.ProgressState]}";
+            }
+
             dbContext.Entry(task).State = EntityState.Modified;
             dbContext.SaveChanges();
             
             return RedirectToAction("Index");
+        }
+
+        public ViewResult ConfirmedTasks()
+        {
+            string userId = User.Identity.GetUserId();
+            var confirmedTasks = dbContext.Tasks
+                .Include(t => t.ApplicationUser)
+                .Where(t => t.ApplicationUserId == userId)
+                .Where(t => t.ProgressState == (int)Task.ProgressStatesEnum.Confirmed)
+                .OrderBy(t => t.Missed)
+                .ToList();
+            List<ConfirmedTaskViewModel> models = new List<ConfirmedTaskViewModel>();
+
+            foreach (Task task in confirmedTasks)
+            {
+                models.Add(new ConfirmedTaskViewModel()
+                {
+                    TaskId = task.TaskId,
+                    Title = task.Title.Length > 28 ? task.Title.Substring(0, 25) + "..." : task.Title,
+                    PlannedFinishDate = task.PlannedFinishDate.ToShortDateString(),
+                    ActualFinishDate = task.ActualFinishedDate.GetValueOrDefault().ToShortDateString(),
+                    TotalDays =  task.ActualFinishedDate.GetValueOrDefault().DayOfYear - task.CreationDate.DayOfYear,
+                    OnTimeStats = (bool)task.Missed ? "missed" : "on time",
+                    OnTimeStatusCollor = (bool)task.Missed ? "red" : "green"
+                });
+            }
+            return View(models);
         }
    
         protected override void Dispose(bool disposing)
