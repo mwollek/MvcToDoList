@@ -16,7 +16,7 @@ namespace MvcToDoList.Models.ViewModels
         public string PlannedFinishDate { get; set; }
         public string ModifyButtonLinkText { get; set; }
         public string ButtonStyle { get; set; }
-        public string ThumbnailBackgroundColour { get; set; }
+        public string ThumbnailBackgroundStyle { get; set; }
 
 
 

@@ -1,7 +1,7 @@
 ﻿@model MvcToDoList.Models.ViewModels.TaskViewModel
 @using MvcToDoList.Models.Own
 <div class="col-sm-6 col-md-4">
-    <div class="thumbnail" style=@Model.ThumbnailBackgroundColour>
+    <div class="thumbnail" style=@Model.ThumbnailBackgroundStyle>
         <div class="caption">
             @if (Model.Status == "done")
             {
@@ -17,7 +17,7 @@
 
 
             @Ajax.ActionLink(Model.ModifyButtonLinkText, "ModifyStatus", new { id = Model.TaskId }, new AjaxOptions { HttpMethod = "POST" }, new { @class = $"btn btn-{Model.ButtonStyle}" })
-            @if (Model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
+            @if (Model.Status == Task.ProgressStatesTextDict[Task.ProgressStates.Done])
             {
                 @Ajax.ActionLink("Confirm As Done", "ModifyStatus", new { id = Model.TaskId, confirmed = true}, new AjaxOptions { HttpMethod = "POST" }, new { @class = $"btn btn-primary" })
 

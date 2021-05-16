@@ -30,28 +30,32 @@ namespace MvcToDoList.Controllers
                 .ToList();
             List<TaskViewModel> models = new List<TaskViewModel>();
 
-            tasks.ForEach(x => models.Add(new TaskViewModel()
+            tasks.ForEach(x =>
             {
-                TaskId = x.TaskId,
-                Title = x.Title.Length > 28 ? x.Title.Substring(0, 25) + "..." : x.Title,
-                Status = ProgressStatesTextDict[x.ProgressState],
-                PlannedFinishDate = x.PlannedFinishDate.ToShortDateString(),
+                var daysToDeadline = x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear;
+                string thumbnailStyle = "";
 
-                DaysLeftMessage = (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear) >= 0 
-                                    ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "passed",
+                if (daysToDeadline >= 0 && x.ProgressState == ProgressStates.Done)
+                    thumbnailStyle = "background-color:#F3FDEC";
+                if (daysToDeadline < 0 && x.ProgressState == ProgressStates.Done)
+                    thumbnailStyle = "background-color:#FCD9DB";
 
-                ModifyButtonLinkText = x.ProgressState == ProgressStates.Done ? "Undo" : "Done",
-                ButtonStyle = x.ProgressState == ProgressStates.Done ? "warning" : "success"
-            }));
+                models.Add(new TaskViewModel()
+                {
+                    TaskId = x.TaskId,
+                    Title = x.Title.Length > 28 ? x.Title.Substring(0, 25) + "..." : x.Title,
+                    Status = ProgressStatesTextDict[x.ProgressState],
+                    PlannedFinishDate = x.PlannedFinishDate.ToShortDateString(),
+
+                    DaysLeftMessage = daysToDeadline >= 0
+                                    ? daysToDeadline.ToString() : "passed",
+
+                    ModifyButtonLinkText = x.ProgressState == ProgressStates.Done ? "Undo" : "Done",
+                    ButtonStyle = x.ProgressState == ProgressStates.Done ? "warning" : "success",
+                    ThumbnailBackgroundStyle = thumbnailStyle
+                });
+            });
             
-            foreach (var model in models)
-            {
-                //TODO: change logic maybe? 
-                if (model.DaysLeftMessage == "passed" & model.Status == ProgressStatesTextDict[ProgressStates.Done])
-                    model.ThumbnailBackgroundColour = "background-color:#FCD9DB";
-                if (model.DaysLeftMessage != "passed" & model.Status == ProgressStatesTextDict[ProgressStates.Done])
-                    model.ThumbnailBackgroundColour = "background-color:#F3FDEC";
-            }
 
             return View(models);
         }
