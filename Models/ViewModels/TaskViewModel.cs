@@ -9,12 +9,14 @@ namespace MvcToDoList.Models.ViewModels
     {
         public int TaskId { get; set; }
         public string Title { get; set; }
+
+        // number of days left for deadline or message: "missed" if deadline is missed
         public string DaysLeftMessage { get; set; }
         public string Status { get; set; }
         public string PlannedFinishDate { get; set; }
         public string ModifyButtonLinkText { get; set; }
         public string ButtonStyle { get; set; }
-        public string ThumbnailBackgroundStyle { get; set; }
+        public string ThumbnailBackgroundColour { get; set; }
 
 
 

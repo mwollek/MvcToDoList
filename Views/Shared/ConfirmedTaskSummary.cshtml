@@ -7,7 +7,7 @@
             <p>Planned date: @Model.PlannedFinishDate</p>
             <p>Finish date: @Model.ActualFinishDate</p>
             <p>Days spent: @Model.TotalDays</p>
-            <p>Status: <p style="color:@Model.OnTimeStatusCollor"><b>@Model.OnTimeStats</b><p></p>
+            <p>Status: <p style="color:@Model.OnTimeStatusColour"><b>@Model.OnTimeStatus</b><p></p>
 
             @Html.ActionLink("Details", "Details", new { id = Model.TaskId }, new { @class = "btn btn-primary" })
         </div>

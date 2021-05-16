@@ -35,8 +35,10 @@ namespace MvcToDoList.Controllers
                 Title = x.Title.Length > 28 ? x.Title.Substring(0, 25) + "..." : x.Title,
                 Status = Task.ProgressStatesDict[x.ProgressState],
                 PlannedFinishDate = x.PlannedFinishDate.ToShortDateString(),
+
                 DaysLeftMessage = (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear) >= 0 
                                     ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "passed",
+
                 ModifyButtonLinkText = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "Undo" : "Done",
                 ButtonStyle = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "warning" : "success"
             }));
@@ -44,9 +46,9 @@ namespace MvcToDoList.Controllers
             foreach (var model in models)
             {
                 if (model.DaysLeftMessage == "passed" & model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
-                    model.ThumbnailBackgroundStyle = "background-color:#FCD9DB";
+                    model.ThumbnailBackgroundColour = "background-color:#FCD9DB";
                 if (model.DaysLeftMessage != "passed" & model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
-                    model.ThumbnailBackgroundStyle = "background-color:#F3FDEC";
+                    model.ThumbnailBackgroundColour = "background-color:#F3FDEC";
             }
 
             return View(models);
@@ -210,8 +212,8 @@ namespace MvcToDoList.Controllers
                     PlannedFinishDate = task.PlannedFinishDate.ToShortDateString(),
                     ActualFinishDate = task.ActualFinishedDate.GetValueOrDefault().ToShortDateString(),
                     TotalDays =  task.ActualFinishedDate.GetValueOrDefault().DayOfYear - task.CreationDate.DayOfYear,
-                    OnTimeStats = (bool)task.Missed ? "missed" : "on time",
-                    OnTimeStatusCollor = (bool)task.Missed ? "red" : "green"
+                    OnTimeStatus = (bool)task.Missed ? "missed" : "on time",
+                    OnTimeStatusColour = (bool)task.Missed ? "red" : "green"
                 });
             }
             return View(models);
