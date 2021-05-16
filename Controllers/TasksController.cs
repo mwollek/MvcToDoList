@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using MvcToDoList.Models;
 using MvcToDoList.Models.Own;
 using MvcToDoList.Models.ViewModels;
+using static MvcToDoList.Models.Own.Task;
 
 namespace MvcToDoList.Controllers
 {
@@ -25,7 +26,7 @@ namespace MvcToDoList.Controllers
             var tasks = dbContext.Tasks
                 .Include(t => t.ApplicationUser)
                 .Where(t => t.ApplicationUserId == userId)
-                .Where(t => t.ProgressState != (int)Task.ProgressStatesEnum.Confirmed)
+                .Where(t => t.ProgressState != ProgressStates.Confirmed)
                 .ToList();
             List<TaskViewModel> models = new List<TaskViewModel>();
 
@@ -33,21 +34,22 @@ namespace MvcToDoList.Controllers
             {
                 TaskId = x.TaskId,
                 Title = x.Title.Length > 28 ? x.Title.Substring(0, 25) + "..." : x.Title,
-                Status = Task.ProgressStatesDict[x.ProgressState],
+                Status = ProgressStatesTextDict[x.ProgressState],
                 PlannedFinishDate = x.PlannedFinishDate.ToShortDateString(),
 
                 DaysLeftMessage = (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear) >= 0 
                                     ? (x.PlannedFinishDate.DayOfYear - DateTime.Now.DayOfYear).ToString() : "passed",
 
-                ModifyButtonLinkText = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "Undo" : "Done",
-                ButtonStyle = x.ProgressState == (int)Task.ProgressStatesEnum.Done ? "warning" : "success"
+                ModifyButtonLinkText = x.ProgressState == ProgressStates.Done ? "Undo" : "Done",
+                ButtonStyle = x.ProgressState == ProgressStates.Done ? "warning" : "success"
             }));
             
             foreach (var model in models)
             {
-                if (model.DaysLeftMessage == "passed" & model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
+                //TODO: change logic maybe? 
+                if (model.DaysLeftMessage == "passed" & model.Status == ProgressStatesTextDict[ProgressStates.Done])
                     model.ThumbnailBackgroundColour = "background-color:#FCD9DB";
-                if (model.DaysLeftMessage != "passed" & model.Status == Task.ProgressStatesDict[(int)Task.ProgressStatesEnum.Done])
+                if (model.DaysLeftMessage != "passed" & model.Status == ProgressStatesTextDict[ProgressStates.Done])
                     model.ThumbnailBackgroundColour = "background-color:#F3FDEC";
             }
 
@@ -117,7 +119,7 @@ namespace MvcToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                task.ProgressState = done == true ? (int)Task.ProgressStatesEnum.Done : (int)Task.ProgressStatesEnum.InProgress;
+                task.ProgressState = done == true ? ProgressStates.Done : ProgressStates.InProgress;
                 dbContext.Entry(task).State = EntityState.Modified;
                 dbContext.SaveChanges();
                 return RedirectToAction("Index");
@@ -166,7 +168,7 @@ namespace MvcToDoList.Controllers
 
             if (confirmed == true)
             {
-                task.ProgressState = (int)Task.ProgressStatesEnum.Confirmed;
+                task.ProgressState = ProgressStates.Confirmed;
                 task.ActualFinishedDate = DateTime.Now.Date;
                 task.Missed = task.PlannedFinishDate < task.ActualFinishedDate ? true : false;
             }
@@ -174,16 +176,16 @@ namespace MvcToDoList.Controllers
             {
                 switch (task.ProgressState)
                 {
-                    case (int)Task.ProgressStatesEnum.Done:
-                        task.ProgressState = (int)Task.ProgressStatesEnum.InProgress;
+                    case ProgressStates.Done:
+                        task.ProgressState = ProgressStates.InProgress;
                         break;
-                    case (int)Task.ProgressStatesEnum.InProgress:
-                        task.ProgressState = (int)Task.ProgressStatesEnum.Done;
+                    case ProgressStates.InProgress:
+                        task.ProgressState = ProgressStates.Done;
                         break;
                     default:
                         break;
                 }
-                TempData["message"] = $"Set task status to: {Task.ProgressStatesDict[task.ProgressState]}";
+                TempData["message"] = $"Set task status to: {ProgressStatesTextDict[task.ProgressState]}";
             }
 
             dbContext.Entry(task).State = EntityState.Modified;
@@ -198,7 +200,7 @@ namespace MvcToDoList.Controllers
             var confirmedTasks = dbContext.Tasks
                 .Include(t => t.ApplicationUser)
                 .Where(t => t.ApplicationUserId == userId)
-                .Where(t => t.ProgressState == (int)Task.ProgressStatesEnum.Confirmed)
+                .Where(t => t.ProgressState == ProgressStates.Confirmed)
                 .OrderBy(t => t.Missed)
                 .ToList();
             List<ConfirmedTaskViewModel> models = new List<ConfirmedTaskViewModel>();

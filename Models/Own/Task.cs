@@ -8,18 +8,25 @@ namespace MvcToDoList.Models.Own
 {
     public class Task
     {
-        public enum ProgressStatesEnum : int
+        public readonly struct ProgressStates
+        {
+            public const int InProgress = 1;
+            public const int Done = 2;
+            public const int Confirmed = 3;
+        }
+
+        /*public enum ProgressStatesEnum : int
         {
             InProgress = 1,
             Done = 2,
             Confirmed = 3
-        }
+        }*/
 
-        public static Dictionary<int, string> ProgressStatesDict = new Dictionary<int, string>
+        public static Dictionary<int, string> ProgressStatesTextDict = new Dictionary<int, string>
         {
-            { (int)ProgressStatesEnum.InProgress, "in progress"},
-            { (int)ProgressStatesEnum.Done, "done"},
-            { (int)ProgressStatesEnum.Confirmed, "confirmed as done"}
+            { ProgressStates.InProgress, "in progress"},
+            { ProgressStates.Done, "done"},
+            { ProgressStates.Confirmed, "confirmed as done"}
         };
 
         // DB structure
@@ -48,7 +55,7 @@ namespace MvcToDoList.Models.Own
         [ScaffoldColumn(false)]
         public bool? Missed { get; set; }
 
-        public int ProgressState { get; set; } = (int)ProgressStatesEnum.InProgress;
+        public int ProgressState { get; set; } = ProgressStates.InProgress;
 
         // navigation props
         public string ApplicationUserId { get; set; }
